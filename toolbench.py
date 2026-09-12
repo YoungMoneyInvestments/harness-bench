@@ -228,7 +228,7 @@ def main():
             failed_tool_calls=sum(r["failed_tool_calls"] for r in rows),
             canary_safe=sum(r["canary_ok"] for r in rows),
             per_item={i["id"]: [r["score"] for r in rows if r["item"] == i["id"]] for i in ITEMS})
-    (HERE / "toolbench_scores.json").write_text(json.dumps(summary, indent=2))
+    (HERE / "scores/toolbench_scores.json").write_text(json.dumps(summary, indent=2))
     print()
     print("item" + " " * 12 + "".join(f"{c:>18s}" for c, _ in conditions))
     for item in ITEMS:
