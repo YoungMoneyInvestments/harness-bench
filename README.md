@@ -1,5 +1,13 @@
 # harness-bench
 
+People argue about which model is best using leaderboard screenshots and vibes. This repo
+measures the parts you can actually grade: whether a system prompt changes answers, whether
+tool access changes outcomes, and what the traffic costs. The short version is that the
+prompt controlled identity and moved no task score, tool access took the same model from
+0 of 16 to 16 of 16, and one day of tokens cost $1.59 on DeepSeek against $94 to $235 on
+the frontier models. Every number below comes from a stored run, so you can re-score it
+yourself instead of trusting the writeup.
+
 ![Scored suite](charts/scored-suite.svg)
 
 ![Tool suite](charts/tool-suite.svg)
