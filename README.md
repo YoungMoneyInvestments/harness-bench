@@ -146,6 +146,7 @@ through `auth.json` being symlinked.
 | `run_bench.py` | The first, unscored pass over five open-ended probes |
 | `regrade.py` | Re-scores stored transcripts without new model calls |
 | `prompts/` | The five open-ended probes |
+| `results/open-ended-probes.jsonl` | Raw records from the first, unscored pass over those probes |
 | `results/` | Raw run records: condition, item, score, grader reason, latency, usage, tool calls, full text |
 | `scores/` | Aggregated per-arm scores |
 | `usage/` | Provider usage summary and the cross-model cost comparison |
