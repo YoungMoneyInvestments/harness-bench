@@ -1,12 +1,18 @@
 # harness-bench
 
-People argue about which model is best using leaderboard screenshots and vibes. This repo
-measures the parts you can actually grade: whether a system prompt changes answers, whether
-tool access changes outcomes, and what the traffic costs. The short version is that the
-prompt controlled identity and moved no task score, tool access took the same model from
-0 of 16 to 16 of 16, and one day of tokens cost $1.59 on DeepSeek against $94 to $235 on
-the frontier models. Every number below comes from a stored run, so you can re-score it
-yourself instead of trusting the writeup.
+The frontier labs and the Chinese open-weight labs keep closing the gap, and cost is
+turning into one of the biggest differences left between them. This test measures that gap
+two ways: what a model costs per million tokens, and how much the harness around it changes
+what the model can actually do. A harness is the scaffolding that exposes tools and steers
+the model into acting, and Codex, Anthropic and DeepSeek each ship their own. We took
+Anthropic's Fable 5.1 system prompt and ran it over both OpenAI and DeepSeek weights, then
+compared DeepSeek V4.1 Flash against GPT-5.6 Sol, GPT-6 Astra, Claude Opus 5, Claude Fable
+5.1 and GPT-5.6 Luna. Two findings carry the rest of the page: tool access moved one model
+from 0 of 16 to 16 of 16, and the same day of tokens cost $1.59 on DeepSeek against $94 to
+$235 on the frontier models.
+
+Every number below comes from a stored run, so you can re-score it yourself instead of
+trusting the writeup.
 
 ![Scored suite](charts/scored-suite.svg)
 
