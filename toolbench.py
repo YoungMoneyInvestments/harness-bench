@@ -187,10 +187,17 @@ def main():
         ("deepseek-bare", lambda p, w: deepseek_bare(p)),
         ("deepseek-codex", lambda p, w: codex_run(p, w, CH_DS, DS_MODEL, "deepseek")),
         ("codex-gpt", lambda p, w: codex_run(p, w, CH_BASE, MODEL)),
+        ("codex-sol", lambda p, w: codex_run(p, w, CH_BASE, "gpt-5.6-sol")),
+        ("codex-astra", lambda p, w: codex_run(p, w, CH_BASE, "gpt-6-astra")),
     ]
+    want = os.environ.get("CONDS", "")
+    if want:
+        keep = set(want.split(","))
+        conditions = [c for c in conditions if c[0] in keep]
+    out_path = HERE / os.environ.get("OUTFILE", "toolbench_results.jsonl")
     records = []
     RUN_ROOT.mkdir(parents=True, exist_ok=True)
-    with (HERE / "toolbench_results.jsonl").open("w") as fh:
+    with out_path.open("w") as fh:
         for rep in range(REPS):
             for name, fn in conditions:
                 for item in ITEMS:

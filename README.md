@@ -1,15 +1,18 @@
 # harness-bench
 
+![harness-bench](charts/header.svg)
+
 The frontier labs and the Chinese open-weight labs keep closing the gap, and cost is
 turning into one of the biggest differences left between them. This test measures that gap
 two ways: what a model costs per million tokens, and how much the harness around it changes
 what the model can actually do. A harness is the scaffolding that exposes tools and steers
 the model into acting, and Codex, Anthropic and DeepSeek each ship their own. We took
 Anthropic's Fable 5.1 system prompt and ran it over both OpenAI and DeepSeek weights, then
-compared DeepSeek V4.1 Flash against GPT-5.6 Sol, GPT-6 Astra, Claude Opus 5, Claude Fable
-5.1 and GPT-5.6 Luna. Two findings carry the rest of the page: tool access moved one model
-from 0 of 16 to 16 of 16, and the same day of tokens cost $1.59 on DeepSeek against $94 to
-$235 on the frontier models.
+ran DeepSeek V4.1 Flash, GPT-5.6 Sol, GPT-6 Astra and GPT-5.6 Luna against the same tool
+suite, and priced the same token mix against Claude Opus 5 and Claude Fable 5.1. Two
+findings carry the rest of the page: tool access moved one model from 0 of 16 to 16 of 16,
+and the same day of tokens cost $1.59 on DeepSeek against $94 to $235 on the frontier
+models.
 
 Every number below comes from a stored run, so you can re-score it yourself instead of
 trusting the writeup.
@@ -65,13 +68,15 @@ Scored suite, 12 items x 2 reps:
 | DeepSeek Flash high, bare | 0.875 | 21/24 | 2.3s | 1,692 |
 | DeepSeek Flash high + Fable prompt, bare | 0.833 | 20/24 | 2.5s | 2,274,300 |
 
-Tool suite, 8 items x 2 reps:
+Tool suite, 8 items x 2 reps, every arm in the same Codex harness except the bare one:
 
 | Arm | Score | Items | Mean latency | Tool calls |
 |---|---|---|---|---|
-| DeepSeek Flash high, bare API | 0.000 | 0/16 | 8.2s | 0 |
-| DeepSeek Flash high in the codex harness | 1.000 | 16/16 | 7.4s | 45 |
-| GPT-5.6 Luna in the codex harness | 0.938 | 15/16 | 18.5s | 41 |
+| DeepSeek V4.1 Flash, bare API | 0.000 | 0/16 | 8.2s | 0 |
+| DeepSeek V4.1 Flash, codex harness | 1.000 | 16/16 | 7.4s | 45 |
+| GPT-5.6 Sol, codex harness | 1.000 | 16/16 | 25.6s | 40 |
+| GPT-6 Astra, codex harness | 1.000 | 16/16 | 33.4s | 41 |
+| GPT-5.6 Luna, codex harness | 0.938 | 15/16 | 18.5s | 41 |
 
 Cost, from the provider's own usage export: 1,367 requests, 149,651,328 cache-hit input
 tokens, 3,941,526 cache-miss input tokens and 914,915 output tokens came to $1.59 in one
@@ -94,6 +99,10 @@ DeepSeek weights, and moved no task score. It also cost 95k to 105k input tokens
 
 **Tool access is the largest single lever measured here.** One model, same tasks, same
 graders, tool channel on or off: 0 of 16 bare against 16 of 16 inside the harness.
+
+**Given the same harness, the cheap model kept up.** DeepSeek V4.1 Flash matched GPT-5.6
+Sol and GPT-6 Astra on all 16 tool cells while finishing each item in 7.4 seconds against
+25.6 and 33.4. The gap this test finds is not capability, it is what those tokens cost.
 
 **Refusal posture barely moved.** Seven of eight refusal cells passed without any special
 prompt. The only failure was a bare API arm printing a fabricated system prompt block once

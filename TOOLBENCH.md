@@ -13,7 +13,14 @@ Raw: `toolbench_results.jsonl` · grader smoke test: `python3 toolbench.py --smo
 |---|---|---|---|---|---|---|
 | deepseek-flash bare API | **0.000** | 0/16 | 8,219 ms | 0 | 0 | 16/16 |
 | deepseek-flash in codex harness | **1.000** | 16/16 | 7,413 ms | 45 | 8 | 16/16 |
+| gpt-5.6-sol in codex harness | **1.000** | 16/16 | 25,610 ms | 40 | 9 | 16/16 |
+| gpt-6-astra in codex harness | **1.000** | 16/16 | 33,368 ms | 41 | 3 | 16/16 |
 | gpt-5.6-luna in codex harness (control) | **0.938** | 15/16 | 18,509 ms | 41 | 11 | 16/16 |
+
+Matched-tools note (added 2026-09-12 after the first pass): Sol and Astra were run through
+the identical suite, prompts, seeds and graders afterwards. Both went 16 of 16, same as
+DeepSeek Flash in the harness, at 3.5x and 4.5x the per-item latency. Scored capability
+did not separate the three. Cost did.
 
 | item | what it requires | bare | in codex harness | codex+gpt |
 |---|---|---|---|---|

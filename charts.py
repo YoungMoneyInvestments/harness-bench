@@ -19,6 +19,8 @@ LABELS = {
     "deepseek-bare": "DeepSeek Flash, bare API",
     "deepseek-codex": "DeepSeek Flash, codex harness",
     "codex-gpt": "GPT-5.6 Luna, codex harness",
+    "codex-sol": "GPT-5.6 Sol, codex harness",
+    "codex-astra": "GPT-6 Astra, codex harness",
 }
 COLORS = ["#4c78a8", "#f58518", "#54a24b", "#b279a2", "#9d755d", "#e45756", "#72b7b2"]
 
@@ -88,7 +90,7 @@ def main():
         "Scored suite", "12 items x 2 reps. Every item machine graded.", rows, scale_max=1.0))
 
     # 2. tool suite, score beside latency
-    order = ["deepseek-bare", "deepseek-codex", "codex-gpt"]
+    order = ["deepseek-bare", "deepseek-codex", "codex-gpt", "codex-sol", "codex-astra"]
     rows = [(f"{LABELS[k]}  ({tools[k]['passed']:.0f}/{tools[k]['n']})", tools[k]["score"], COLORS[i])
             for i, k in enumerate(order)]
     (OUT / "tool-suite.svg").write_text(bars(
@@ -99,6 +101,36 @@ def main():
     (OUT / "tool-latency.svg").write_text(bars(
         "Mean latency per tool item", "Seconds per item, same suite.", rows,
         value_fmt="{:.1f}", unit="s"))
+
+    # 2b. header banner
+    price_rows = list(csv.DictReader((HERE / "usage/cross-model-cost-same-token-mix.csv").open()))
+    cost_line = ", ".join(f'{r["model"].replace(" (off-peak actual)", "").replace("Claude ", "")} '
+                          f'${float(r["cost_for_exported_mix_usd"]):,.2f}' for r in price_rows)
+    W, H = 1280, 300
+    stats = [
+        ("Tool access", "0 of 16 bare  vs  16 of 16 inside a harness"),
+        ("Speed, same suite", "7.4s DeepSeek  vs  25.6s Sol  vs  33.4s Astra"),
+        ("Cost, same tokens", f'DeepSeek ${price_rows[0]["cost_for_exported_mix_usd"]}  vs  '
+                              f'${price_rows[1]["cost_for_exported_mix_usd"]} to '
+                              f'${price_rows[-1]["cost_for_exported_mix_usd"]} on the frontier'),
+    ]
+    body = [
+        f'<rect width="{W}" height="{H}" fill="#0d1117"/>',
+        f'<text x="56" y="104" font-family="{FONT}" font-size="52" font-weight="700" fill="#ffffff">harness-bench</text>',
+        f'<text x="56" y="146" font-family="{FONT}" font-size="19" fill="#9aa4b2">'
+        f'System prompts, tool harnesses, and cost per million tokens, measured.</text>',
+    ]
+    for i, (label, value) in enumerate(stats):
+        y = 186 + i * 26
+        body.append(f'<circle cx="62" cy="{y - 5}" r="4" fill="{COLORS[i]}"/>')
+        body.append(f'<text x="82" y="{y}" font-family="{FONT}" font-size="16" fill="#e6edf3">'
+                    f'<tspan fill="#9aa4b2">{esc(label)}: </tspan>{esc(value)}</text>')
+    body.append(f'<line x1="56" y1="248" x2="1224" y2="248" stroke="#1f2937" stroke-width="1"/>')
+    body.append(f'<text x="56" y="274" font-family="{FONT}" font-size="13" fill="#6e7681">'
+                f'Scored suite, tool suite, and raw run records, reproducible with python3 charts.py</text>')
+    (OUT / "header.svg").write_text(
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
+        f'role="img" aria-label="harness-bench">\n' + "\n".join(body) + "\n</svg>")
 
     # 3. cost comparison
     price_rows = list(csv.DictReader((HERE / "usage/cross-model-cost-same-token-mix.csv").open()))

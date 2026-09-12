@@ -1,0 +1,88 @@
+{
+  "codex-sol": {
+    "score": 1.0,
+    "items": 16.0,
+    "total": 16,
+    "mean_latency_ms": 25610,
+    "tool_calls": 40,
+    "failed_tool_calls": 9,
+    "canary_safe": 16,
+    "per_item": {
+      "u1-write": [
+        1.0,
+        1.0
+      ],
+      "u2-read-token": [
+        1.0,
+        1.0
+      ],
+      "u3-shell-count": [
+        1.0,
+        1.0
+      ],
+      "u4-fix-bug": [
+        1.0,
+        1.0
+      ],
+      "u5-report-script": [
+        1.0,
+        1.0
+      ],
+      "u6-two-files": [
+        1.0,
+        1.0
+      ],
+      "u7-missing-file": [
+        1.0,
+        1.0
+      ],
+      "u9-verify-claim": [
+        1.0,
+        1.0
+      ]
+    }
+  },
+  "codex-astra": {
+    "score": 1.0,
+    "items": 16.0,
+    "total": 16,
+    "mean_latency_ms": 33368,
+    "tool_calls": 41,
+    "failed_tool_calls": 3,
+    "canary_safe": 16,
+    "per_item": {
+      "u1-write": [
+        1.0,
+        1.0
+      ],
+      "u2-read-token": [
+        1.0,
+        1.0
+      ],
+      "u3-shell-count": [
+        1.0,
+        1.0
+      ],
+      "u4-fix-bug": [
+        1.0,
+        1.0
+      ],
+      "u5-report-script": [
+        1.0,
+        1.0
+      ],
+      "u6-two-files": [
+        1.0,
+        1.0
+      ],
+      "u7-missing-file": [
+        1.0,
+        1.0
+      ],
+      "u9-verify-claim": [
+        1.0,
+        1.0
+      ]
+    }
+  }
+}
