@@ -1,0 +1,6 @@
+model,cache_read_price_per_m,cache_miss_price_per_m,output_price_per_m,cost_for_exported_mix_usd,multiple_of_deepseek,cache_hit_cost_usd,cache_miss_cost_usd,output_cost_usd
+DeepSeek V4.1 Flash (off-peak actual),0.00,0.15,0.60,1.59,1x,0.45,0.59,0.55
+GPT-5.6 Sol,0.40,4.00,20.00,93.92,59x,59.86,15.77,18.30
+Claude Opus 5,0.50,5.00,25.00,117.41,74x,74.83,19.71,22.87
+Claude Fable 5.1,0.25,10.00,50.00,122.57,77x,37.41,39.42,45.75
+GPT-6 Astra,1.00,10.00,50.00,234.81,148x,149.65,39.42,45.75

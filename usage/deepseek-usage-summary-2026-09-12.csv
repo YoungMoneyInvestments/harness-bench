@@ -1,0 +1,3 @@
+date,model,api_key_name,request_count,input_cache_hit_tokens,input_cache_miss_tokens,output_tokens,cache_hit_price_per_token,cache_miss_price_per_token,output_price_per_token,cost_usd
+2026-09-12,deepseek-flash,prod-key,1367,149651328,3941526,914915,0.000000003,0.00000015,0.0000006,1.589131884
+2026-09-12,deepseek-v4-pro,prod-key,6,0,1293,117,,0.00000066,0.00000198,0.00108504
