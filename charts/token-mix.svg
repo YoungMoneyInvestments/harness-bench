@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="330" viewBox="0 0 900 330" role="img" aria-label="Where the tokens went">
+<rect width="900" height="330" fill="#ffffff"/>
+<text x="32" y="44" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="22" font-weight="600" fill="#111111">Where the tokens went</text>
+<text x="32" y="70" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" fill="#666666">DeepSeek V4.1 Flash, 2026-09-12, provider usage export.</text>
+<text x="40" y="98" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="14" fill="#333333">All tokens, one day. 97.4% of prompt tokens were cache hits.</text>
+<rect x="40.0" y="110" width="794.2" height="40" fill="#4c78a8"/>
+<rect x="834.2" y="110" width="20.9" height="40" fill="#f58518"/>
+<rect x="855.1" y="110" width="4.9" height="40" fill="#54a24b"/>
+<rect x="40" y="164" width="12" height="12" fill="#4c78a8"/>
+<text x="60" y="174" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" fill="#333333">cache hit 149,651,328</text>
+<rect x="325" y="164" width="12" height="12" fill="#f58518"/>
+<text x="345" y="174" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" fill="#333333">cache miss 3,941,526</text>
+<rect x="610" y="164" width="12" height="12" fill="#54a24b"/>
+<text x="630" y="174" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="13" fill="#333333">output 914,915</text>
+<text x="40" y="212" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="14" fill="#333333">Non-cache tokens, same day, zoomed in:</text>
+<rect x="40.0" y="224" width="665.5" height="24" fill="#f58518"/>
+<rect x="705.5" y="224" width="154.5" height="24" fill="#54a24b"/>
+<text x="40" y="272" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="14" fill="#333333">154,507,769 tokens &#183; $1.59 &#183; about $0.0012 per request, off-peak rates</text>
+<text x="32" y="314" font-family="-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif" font-size="11" fill="#999999">harness-bench &#183; raw runs in results/ &#183; regenerate with python3 charts.py</text>
+</svg>

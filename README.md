@@ -1,5 +1,18 @@
 # harness-bench
 
+![Scored suite](charts/scored-suite.svg)
+
+![Tool suite](charts/tool-suite.svg)
+
+![Cost comparison](charts/cost-comparison.svg)
+
+![Where the tokens went](charts/token-mix.svg)
+
+![Mean latency per tool item](charts/tool-latency.svg)
+
+Every figure is generated from the stored run records by `charts.py`, with no plotting
+library, so they cannot drift from the numbers in `results/` and `usage/`.
+
 A small, scorable benchmark for the questions people argue about without measuring:
 does a model's system prompt change its answers, does tool access change its outcomes,
 and what does the traffic actually cost.
