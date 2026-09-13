@@ -107,3 +107,18 @@ new model calls, so the corrected numbers rest on unchanged raw output.
 - t11 measures tool availability, not model skill. Do not read it as a quality gap.
 - Codex arms ran with a clean `CODEX_HOME` (auth symlinked, no AGENTS.md, no hooks), so
   Cameron's own operating instructions are excluded from all three arms.
+
+## 2026-09-13 — Claude Code as a harness, same scored suite
+
+Run the same day as each other, condition-corrected, `results/suite_results_ds_harness_2026-09-13.jsonl`:
+
+| arm | score | items | mean latency |
+|---|---|---|---|
+| DeepSeek Flash, bare API | 0.875 | 21/24 | 2,380 ms |
+| DeepSeek Flash, Claude Code harness | **0.917** | 22/24 | 3,187 ms |
+
+Identical on all ten task and policy items. They differ on exactly two, in opposite
+directions: **t11-file** bare 0/2 vs harness 2/2 (no tool channel, no file), and
+**t12-identity** bare 1/2 vs harness 0/2 (inside Claude Code, DeepSeek says "I'm Claude,
+made by Anthropic"). The harness hands it the filesystem and takes its name. Item-level
+detail, token counts and the grader fix: `TOOLBENCH.md`.

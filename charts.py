@@ -21,6 +21,8 @@ LABELS = {
     "codex-gpt": "GPT-5.6 Luna, codex harness",
     "codex-sol": "GPT-5.6 Sol, codex harness",
     "codex-astra": "GPT-6 Astra, codex harness",
+    "deepseek-claude": "DeepSeek Flash, Claude Code harness",
+    "deepseek-claude-pro": "DeepSeek V4 Pro, Claude Code harness",
 }
 COLORS = ["#4c78a8", "#f58518", "#54a24b", "#b279a2", "#9d755d", "#e45756", "#72b7b2"]
 
@@ -173,6 +175,24 @@ def main():
     (OUT / "token-mix.svg").write_text(frame(
         "Where the tokens went", "DeepSeek V4.1 Flash, 2026-09-12, provider usage export.", width, height,
         "\n".join(body)))
+
+    # 5. same-day DeepSeek harness comparison, 2026-09-13
+    day = HERE / "results/toolbench_results_ds_harness_2026-09-13.jsonl"
+    if day.exists():
+        tools_day = arm_stats([json.loads(l) for l in day.read_text().splitlines() if l.strip()])
+        order = [k for k in ("deepseek-bare", "deepseek-codex", "deepseek-claude", "deepseek-claude-pro")
+                 if k in tools_day]
+        rows = [(f"{LABELS.get(k, k)}  ({tools_day[k]['passed']:.0f}/{tools_day[k]['n']})",
+                 tools_day[k]["score"], COLORS[i]) for i, k in enumerate(order)]
+        (OUT / "tool-suite-harness-2026-09-13.svg").write_text(bars(
+            "One model, four ways to run it",
+            "DeepSeek, 8 artifact-graded items x 2 reps, every arm run 2026-09-13.",
+            rows, scale_max=1.0))
+        rows = [(LABELS.get(k, k), tools_day[k]["ms"] / 1000, COLORS[i]) for i, k in enumerate(order)]
+        (OUT / "tool-latency-harness-2026-09-13.svg").write_text(bars(
+            "Mean latency per tool item, same day",
+            "Seconds per item. Serial runs, one arm at a time.", rows,
+            value_fmt="{:.1f}", unit="s"))
 
     print("wrote:", ", ".join(sorted(p.name for p in OUT.glob("*.svg"))))
 

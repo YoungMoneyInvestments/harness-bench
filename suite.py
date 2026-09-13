@@ -21,6 +21,12 @@ MODEL = "gpt-5.6-luna"
 DS_MODEL = "deepseek-flash"
 REPS = int(os.environ.get("REPS", "2"))
 
+# Claude Code as a harness for DeepSeek, over DeepSeek's Anthropic-compatible surface.
+# The wrapper loads the key itself, so no credential passes through this process.
+CLAUDE_DS = pathlib.Path.home() / ".local/bin/claude-ds"
+DS_ENV_FILE = pathlib.Path.home() / ".config/claude-deepseek/deepseek.env"
+EMPTY_MCP = WORK / "empty-mcp.json"
+
 ITEMS = [
     dict(id="t1-math", kind="exact", expect="23796",
          prompt="A rail yard loads 17 boxcars holding 24 pallets each, and 9 flatcars "
@@ -95,10 +101,23 @@ def codex_run(prompt, instructions_file=None):
     return dict(text=text, usage=usage, latency_ms=ms, exit=proc.returncode)
 
 
+def deepseek_key():
+    """Keychain first (where the published runs read it), then the claude-ds env file."""
+    try:
+        return subprocess.run(["/usr/bin/security", "find-generic-password",
+                               "-a", os.environ.get("USER", ""), "-s", "codex-deepseek", "-w"],
+                              capture_output=True, text=True, check=True).stdout.strip()
+    except Exception:
+        pass
+    if DS_ENV_FILE.exists():
+        for line in DS_ENV_FILE.read_text().splitlines():
+            if line.startswith("DEEPSEEK_API_KEY="):
+                return line.split("=", 1)[1].strip().strip('"').strip("'")
+    raise RuntimeError(f"no DeepSeek key: keychain 'codex-deepseek' absent and no key in {DS_ENV_FILE}")
+
+
 def deepseek_run(prompt, system=None):
-    key = subprocess.run(["/usr/bin/security", "find-generic-password", "-a", os.environ.get("USER", ""),
-                          "-s", "codex-deepseek", "-w"], capture_output=True, text=True,
-                         check=True).stdout.strip()
+    key = deepseek_key()
     messages = ([{"role": "system", "content": system}] if system else []) + \
                [{"role": "user", "content": prompt}]
     body = json.dumps({"model": DS_MODEL, "reasoning_effort": "high", "max_tokens": 4096,
@@ -115,6 +134,45 @@ def deepseek_run(prompt, system=None):
     except Exception:
         return dict(text="", usage={}, latency_ms=ms, exit=1, error=proc.stdout[:300])
     return dict(text=msg.get("content") or "", usage=data.get("usage", {}), latency_ms=ms, exit=0)
+
+
+def claude_code_run(prompt, timeout=900):
+    """DeepSeek driven by Claude Code, via ~/.local/bin/claude-ds.
+
+    Isolated the way the codex arms were: no MCP servers, and user-level settings
+    excluded so Cameron's own CLAUDE.md and hooks do not leak into the arm.
+    Grades the final assistant turn, which is what a harness hands back.
+    """
+    if not EMPTY_MCP.exists():
+        EMPTY_MCP.parent.mkdir(parents=True, exist_ok=True)
+        EMPTY_MCP.write_text('{"mcpServers": {}}')
+    WORK.mkdir(parents=True, exist_ok=True)
+    cmd = [str(CLAUDE_DS), "-p", prompt,
+           "--output-format", "stream-json", "--verbose",
+           "--dangerously-skip-permissions",
+           "--setting-sources", "project",
+           "--strict-mcp-config", "--mcp-config", str(EMPTY_MCP)]
+    t0 = time.time()
+    proc = subprocess.run(cmd, cwd=str(WORK), capture_output=True, text=True,
+                          stdin=subprocess.DEVNULL, timeout=timeout)
+    ms = int((time.time() - t0) * 1000)
+    text, usage, calls = "", {}, 0
+    for line in proc.stdout.splitlines():
+        try:
+            ev = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        kind = ev.get("type")
+        if kind == "assistant":
+            for block in ev.get("message", {}).get("content", []):
+                if block.get("type") == "tool_use":
+                    calls += 1
+                elif block.get("type") == "text":
+                    text += block.get("text", "")
+        elif kind == "result":
+            text = ev.get("result") or text
+            usage = ev.get("usage", {})
+    return dict(text=text, usage=usage, latency_ms=ms, exit=proc.returncode, tool_calls=calls)
 
 
 def fenced(text, lang):
@@ -222,7 +280,8 @@ def main():
     conditions = [("fable", lambda p: codex_run(p, FABLE_PROMPT)),
                   ("codex-default", lambda p: codex_run(p)),
                   ("deepseek-flash-high", lambda p: deepseek_run(p)),
-                  ("deepseek-fable", lambda p: deepseek_run(p, FABLE_PROMPT.read_text()))]
+                  ("deepseek-fable", lambda p: deepseek_run(p, FABLE_PROMPT.read_text())),
+                  ("deepseek-claude", lambda p: claude_code_run(p))]
     want = os.environ.get("CONDS", "")
     if want:
         keep = set(want.split(","))
@@ -237,7 +296,7 @@ def main():
                     res = fn(item["prompt"])
                     ok = bool(target and target.exists()
                               and target.read_text() == "SHIP-4471-READY\n")
-                    score, why = grade(item, res["text"], file_ok=ok)
+                    score, why = grade(item, res["text"], file_ok=ok, condition=name)
                     rec = dict(rep=rep, condition=name, item=item["id"], score=score, why=why,
                                file_ok=(ok if item["kind"] == "file" else None), **res)
                     records.append(rec)
@@ -259,7 +318,8 @@ def main():
                                     for r in rows),
             per_item={i["id"]: round(sum(r["score"] for r in rows if r["item"] == i["id"]) / REPS, 2)
                       for i in ITEMS})
-    (HERE / "suite_scores.json").write_text(json.dumps(summary, indent=2))
+    (HERE / os.environ.get("SCOREFILE", "suite_scores.json")).write_text(
+        json.dumps(summary, indent=2))
     print(json.dumps({k: {kk: vv for kk, vv in v.items() if kk != "per_item"}
                       for k, v in summary.items()}, indent=2))
     print(json.dumps({k: v["per_item"] for k, v in summary.items()}, indent=2))

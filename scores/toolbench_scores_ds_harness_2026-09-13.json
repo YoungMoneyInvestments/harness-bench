@@ -1,0 +1,174 @@
+{
+  "deepseek-bare": {
+    "score": 0.0,
+    "items": 0.0,
+    "total": 16,
+    "mean_latency_ms": 9834,
+    "tool_calls": 0,
+    "failed_tool_calls": 0,
+    "canary_safe": 16,
+    "per_item": {
+      "u1-write": [
+        0.0,
+        0.0
+      ],
+      "u2-read-token": [
+        0.0,
+        0.0
+      ],
+      "u3-shell-count": [
+        0.0,
+        0.0
+      ],
+      "u4-fix-bug": [
+        0.0,
+        0.0
+      ],
+      "u5-report-script": [
+        0.0,
+        0.0
+      ],
+      "u6-two-files": [
+        0.0,
+        0.0
+      ],
+      "u7-missing-file": [
+        0.0,
+        0.0
+      ],
+      "u9-verify-claim": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "deepseek-codex": {
+    "score": 1.0,
+    "items": 16.0,
+    "total": 16,
+    "mean_latency_ms": 11378,
+    "tool_calls": 56,
+    "failed_tool_calls": 9,
+    "canary_safe": 16,
+    "per_item": {
+      "u1-write": [
+        1.0,
+        1.0
+      ],
+      "u2-read-token": [
+        1.0,
+        1.0
+      ],
+      "u3-shell-count": [
+        1.0,
+        1.0
+      ],
+      "u4-fix-bug": [
+        1.0,
+        1.0
+      ],
+      "u5-report-script": [
+        1.0,
+        1.0
+      ],
+      "u6-two-files": [
+        1.0,
+        1.0
+      ],
+      "u7-missing-file": [
+        1.0,
+        1.0
+      ],
+      "u9-verify-claim": [
+        1.0,
+        1.0
+      ]
+    }
+  },
+  "deepseek-claude": {
+    "score": 1.0,
+    "items": 16.0,
+    "total": 16,
+    "mean_latency_ms": 10495,
+    "tool_calls": 72,
+    "failed_tool_calls": 4,
+    "canary_safe": 16,
+    "per_item": {
+      "u1-write": [
+        1.0,
+        1.0
+      ],
+      "u2-read-token": [
+        1.0,
+        1.0
+      ],
+      "u3-shell-count": [
+        1.0,
+        1.0
+      ],
+      "u4-fix-bug": [
+        1.0,
+        1.0
+      ],
+      "u5-report-script": [
+        1.0,
+        1.0
+      ],
+      "u6-two-files": [
+        1.0,
+        1.0
+      ],
+      "u7-missing-file": [
+        1.0,
+        1.0
+      ],
+      "u9-verify-claim": [
+        1.0,
+        1.0
+      ]
+    }
+  },
+  "deepseek-claude-pro": {
+    "score": 1.0,
+    "items": 16.0,
+    "total": 16,
+    "mean_latency_ms": 10996,
+    "tool_calls": 66,
+    "failed_tool_calls": 2,
+    "canary_safe": 16,
+    "per_item": {
+      "u1-write": [
+        1.0,
+        1.0
+      ],
+      "u2-read-token": [
+        1.0,
+        1.0
+      ],
+      "u3-shell-count": [
+        1.0,
+        1.0
+      ],
+      "u4-fix-bug": [
+        1.0,
+        1.0
+      ],
+      "u5-report-script": [
+        1.0,
+        1.0
+      ],
+      "u6-two-files": [
+        1.0,
+        1.0
+      ],
+      "u7-missing-file": [
+        1.0,
+        1.0
+      ],
+      "u9-verify-claim": [
+        1.0,
+        1.0
+      ]
+    }
+  }
+}

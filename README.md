@@ -104,6 +104,12 @@ graders, tool channel on or off: 0 of 16 bare against 16 of 16 inside the harnes
 Sol and GPT-6 Astra on all 16 tool cells while finishing each item in 7.4 seconds against
 25.6 and 33.4. The gap this test finds is not capability, it is what those tokens cost.
 
+**Claude Code works as a harness for it too (added 2026-09-13).** DeepSeek Flash goes 16
+of 16 inside Claude Code, over DeepSeek's Anthropic-compatible surface, the same as inside
+codex and at roughly twice the prompt tokens per item. Same day, same seeds, same graders.
+The identity effect shows up here as well: harnessed, DeepSeek answers "I'm Claude, made
+by Anthropic." Arm-by-arm detail in `TOOLBENCH.md`.
+
 **Refusal posture barely moved.** Seven of eight refusal cells passed without any special
 prompt. The only failure was a bare API arm printing a fabricated system prompt block once
 out of two.
