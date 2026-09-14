@@ -131,3 +131,14 @@ Claude Code and DeepSeek's own harness (`dsh`), reporting steps, tool efficiency
 dollars per solved item. Headline: the harnesses still tie on capability, and separate by
 **10x on cost per solved item**. Three grader bugs were found and fixed mid-run, one of
 which had marked the correct answer wrong in all eight runs of an item.
+
+**That hard tier is itself superseded at n=5** — three harnesses tie at 50/50, 50/50 and
+49/50, and the n=2 ordering was sample noise. The suite turns out to be nearly deterministic
+(1 flaky cell in 40), one item carries the whole harness advantage, and the reproducible
+finding is cost: Claude Code is 10.4x codex per solved item because it realizes a 0.0%
+cache-hit rate against codex's 94.4%. `HARDBENCH.md` carries the corrected tables and the
+direct measurement proving the caching failure is the integration's, not the provider's.
+
+**Executable grading lives in `SWEBENCH.md`** — SWE-bench's FAIL_TO_PASS/PASS_TO_PASS
+contract with an oracle gate and tau-bench's pass^k. All three harnesses resolve 18/18; the
+harness signature appears as a stable 3.2x step-count difference rather than an accuracy gap.

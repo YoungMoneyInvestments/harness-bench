@@ -120,6 +120,15 @@ identical result. Unharnessed, DeepSeek accepts a false premise about its own id
 harnessed, none of the four do. Detail, including three grader bugs found and fixed
 mid-run: `HARDBENCH.md`.
 
+**A SWE-bench-shaped tier grades executable state instead of answers (added 2026-09-13).**
+Small repositories, a real test suite, hidden generated tests, and the SWE-bench contract:
+`resolved` only if every FAIL_TO_PASS test now passes *and* every PASS_TO_PASS test still
+passes, with test files reset from canonical before grading so a task cannot be passed by
+editing its tests, and an oracle gate that rejects any task its own gold patch does not
+resolve. All three harnesses resolve 18/18 with pass^3 = 1.000. What separates them is not
+accuracy but **effort**: Claude Code takes 3.2x the steps of codex — stable across all six
+instances, no overlap — and 3.1x the dollars per resolved task. `SWEBENCH.md`.
+
 **Refusal posture barely moved.** Seven of eight refusal cells passed without any special
 prompt. The only failure was a bare API arm printing a fabricated system prompt block once
 out of two.

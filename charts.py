@@ -216,6 +216,25 @@ def main():
             "DeepSeek published rates applied to measured usage. Lower is better.",
             rows, value_fmt="${:.4f}"))
 
+    # 7. robustness pass, n=5 scored tier -- what survives more reps
+    n5 = HERE / "scores/hardbench_scored_n5_2026-09-13.json"
+    if n5.exists():
+        s = json.loads(n5.read_text())
+        order = [k for k in ("deepseek-bare", "deepseek-codex", "deepseek-claude", "deepseek-dsh")
+                 if k in s]
+        rows = [(f"{LABELS.get(k, k)}  ({s[k]['items_passed']:.0f}/{s[k]['items_total']})",
+                 s[k]["score"], COLORS[i]) for i, k in enumerate(order)]
+        (OUT / "robust-score-n5-2026-09-13.svg").write_text(bars(
+            "Hard scored tier at n=5: score",
+            "200 runs. Three harnesses tie; the n=2 ranking was sample noise.",
+            rows, scale_max=1.0))
+        rows = [(LABELS.get(k, k), s[k]["cost_per_solved_usd"] or 0.0, COLORS[i])
+                for i, k in enumerate(order)]
+        (OUT / "robust-cost-n5-2026-09-13.svg").write_text(bars(
+            "Hard scored tier at n=5: dollars per solved item",
+            "Claude Code 10.4x codex, driven by a 0.0% cache-hit rate against codex's 94.4%.",
+            rows, value_fmt="${:.5f}"))
+
     print("wrote:", ", ".join(sorted(p.name for p in OUT.glob("*.svg"))))
 
 
