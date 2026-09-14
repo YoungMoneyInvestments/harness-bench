@@ -23,6 +23,7 @@ LABELS = {
     "codex-astra": "GPT-6 Astra, codex harness",
     "deepseek-claude": "DeepSeek Flash, Claude Code harness",
     "deepseek-claude-pro": "DeepSeek V4 Pro, Claude Code harness",
+    "deepseek-dsh": "DeepSeek Flash, DeepSeek's own harness (dsh)",
 }
 COLORS = ["#4c78a8", "#f58518", "#54a24b", "#b279a2", "#9d755d", "#e45756", "#72b7b2"]
 
@@ -193,6 +194,27 @@ def main():
             "Mean latency per tool item, same day",
             "Seconds per item. Serial runs, one arm at a time.", rows,
             value_fmt="{:.1f}", unit="s"))
+
+    # 6. hard tier, 2026-09-13: score and dollars per solved item
+    for tier in ("tool", "scored"):
+        sf = HERE / f"scores/hardbench_{tier}_scores_2026-09-13.json"
+        if not sf.exists():
+            continue
+        s = json.loads(sf.read_text())
+        order = [k for k in ("deepseek-bare", "deepseek-codex", "deepseek-claude", "deepseek-dsh")
+                 if k in s]
+        rows = [(f"{LABELS.get(k, k)}  ({s[k]['items_passed']:.0f}/{s[k]['items_total']})",
+                 s[k]["score"], COLORS[i]) for i, k in enumerate(order)]
+        (OUT / f"hard-{tier}-score-2026-09-13.svg").write_text(bars(
+            f"Hard {tier} tier: score",
+            "Harder items, four ways to run DeepSeek Flash, all run 2026-09-13.",
+            rows, scale_max=1.0))
+        rows = [(LABELS.get(k, k), s[k]["cost_per_solved_usd"] or 0.0, COLORS[i])
+                for i, k in enumerate(order)]
+        (OUT / f"hard-{tier}-cost-2026-09-13.svg").write_text(bars(
+            f"Hard {tier} tier: dollars per solved item",
+            "DeepSeek published rates applied to measured usage. Lower is better.",
+            rows, value_fmt="${:.4f}"))
 
     print("wrote:", ", ".join(sorted(p.name for p in OUT.glob("*.svg"))))
 

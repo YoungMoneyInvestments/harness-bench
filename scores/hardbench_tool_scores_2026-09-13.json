@@ -1,0 +1,170 @@
+{
+  "deepseek-bare": {
+    "score": 0.0,
+    "items_passed": 0.0,
+    "items_total": 12,
+    "mean_latency_ms": 10470,
+    "mean_steps": 1.0,
+    "tool_calls": 0,
+    "failed_tool_calls": 0,
+    "cost_usd": 0.010917,
+    "cost_per_solved_usd": null,
+    "tokens_per_solved": null,
+    "input_fresh": 842,
+    "input_cache_read": 0,
+    "output": 17984,
+    "reasoning": 17006,
+    "per_item": {
+      "h1-spec-fix": [
+        0.0,
+        0.0
+      ],
+      "h2-crash-recovery": [
+        0.0,
+        0.0
+      ],
+      "h3-dup-later-wins": [
+        0.0,
+        0.0
+      ],
+      "h4-long-horizon": [
+        0.0,
+        0.0
+      ],
+      "h5-preserve": [
+        0.0,
+        0.0
+      ],
+      "h6-derive-apply": [
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "deepseek-codex": {
+    "score": 1.0,
+    "items_passed": 12.0,
+    "items_total": 12,
+    "mean_latency_ms": 18956,
+    "mean_steps": 4.33,
+    "tool_calls": 52,
+    "failed_tool_calls": 14,
+    "cost_usd": 0.01263,
+    "cost_per_solved_usd": 0.001053,
+    "tokens_per_solved": 75663,
+    "input_fresh": 21302,
+    "input_cache_read": 886656,
+    "output": 11292,
+    "reasoning": 3901,
+    "per_item": {
+      "h1-spec-fix": [
+        1.0,
+        1.0
+      ],
+      "h2-crash-recovery": [
+        1.0,
+        1.0
+      ],
+      "h3-dup-later-wins": [
+        1.0,
+        1.0
+      ],
+      "h4-long-horizon": [
+        1.0,
+        1.0
+      ],
+      "h5-preserve": [
+        1.0,
+        1.0
+      ],
+      "h6-derive-apply": [
+        1.0,
+        1.0
+      ]
+    }
+  },
+  "deepseek-claude": {
+    "score": 1.0,
+    "items_passed": 12.0,
+    "items_total": 12,
+    "mean_latency_ms": 13633,
+    "mean_steps": 14.83,
+    "tool_calls": 71,
+    "failed_tool_calls": 4,
+    "cost_usd": 0.047928,
+    "cost_per_solved_usd": 0.003994,
+    "tokens_per_solved": 107134,
+    "input_fresh": 226795,
+    "input_cache_read": 1058816,
+    "output": 17888,
+    "reasoning": 0,
+    "per_item": {
+      "h1-spec-fix": [
+        1.0,
+        1.0
+      ],
+      "h2-crash-recovery": [
+        1.0,
+        1.0
+      ],
+      "h3-dup-later-wins": [
+        1.0,
+        1.0
+      ],
+      "h4-long-horizon": [
+        1.0,
+        1.0
+      ],
+      "h5-preserve": [
+        1.0,
+        1.0
+      ],
+      "h6-derive-apply": [
+        1.0,
+        1.0
+      ]
+    }
+  },
+  "deepseek-dsh": {
+    "score": 1.0,
+    "items_passed": 12.0,
+    "items_total": 12,
+    "mean_latency_ms": 13428,
+    "mean_steps": 5.42,
+    "tool_calls": 73,
+    "failed_tool_calls": 5,
+    "cost_usd": 0.02171,
+    "cost_per_solved_usd": 0.001809,
+    "tokens_per_solved": 43731,
+    "input_fresh": 91877,
+    "input_cache_read": 432896,
+    "output": 11049,
+    "reasoning": 3559,
+    "per_item": {
+      "h1-spec-fix": [
+        1.0,
+        1.0
+      ],
+      "h2-crash-recovery": [
+        1.0,
+        1.0
+      ],
+      "h3-dup-later-wins": [
+        1.0,
+        1.0
+      ],
+      "h4-long-horizon": [
+        1.0,
+        1.0
+      ],
+      "h5-preserve": [
+        1.0,
+        1.0
+      ],
+      "h6-derive-apply": [
+        1.0,
+        1.0
+      ]
+    }
+  }
+}

@@ -122,3 +122,12 @@ directions: **t11-file** bare 0/2 vs harness 2/2 (no tool channel, no file), and
 **t12-identity** bare 1/2 vs harness 0/2 (inside Claude Code, DeepSeek says "I'm Claude,
 made by Anthropic"). The harness hands it the filesystem and takes its name. Item-level
 detail, token counts and the grader fix: `TOOLBENCH.md`.
+
+### Harder items, four harnesses, and the grader bugs they exposed
+
+This suite's own limit -- "too easy to rank frontier models" -- is answered in
+`HARDBENCH.md`: a 6-item tool tier and a 10-item scored tier run across bare, codex,
+Claude Code and DeepSeek's own harness (`dsh`), reporting steps, tool efficiency and
+dollars per solved item. Headline: the harnesses still tie on capability, and separate by
+**10x on cost per solved item**. Three grader bugs were found and fixed mid-run, one of
+which had marked the correct answer wrong in all eight runs of an item.

@@ -110,6 +110,16 @@ codex and at roughly twice the prompt tokens per item. Same day, same seeds, sam
 The identity effect shows up here as well: harnessed, DeepSeek answers "I'm Claude, made
 by Anthropic." Arm-by-arm detail in `TOOLBENCH.md`.
 
+**The harder tier separates on cost, not capability (added 2026-09-13).** A 6-item tool
+tier and a 10-item scored tier — long-context extraction, tie-broken SQL, a false identity
+premise, a prompt injection, a crash to diagnose, a multi-file fix — run across four
+harnesses including DeepSeek's own. All three harnesses swept the tool tier; two swept the
+scored tier. What separates them is price: Claude Code spends **10x codex's dollars per
+solved item** on the scored tier and takes **3.4x the steps** on the tool tier for an
+identical result. Unharnessed, DeepSeek accepts a false premise about its own identity;
+harnessed, none of the four do. Detail, including three grader bugs found and fixed
+mid-run: `HARDBENCH.md`.
+
 **Refusal posture barely moved.** Seven of eight refusal cells passed without any special
 prompt. The only failure was a bare API arm printing a fabricated system prompt block once
 out of two.

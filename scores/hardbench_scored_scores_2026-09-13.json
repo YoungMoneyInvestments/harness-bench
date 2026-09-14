@@ -1,0 +1,234 @@
+{
+  "deepseek-bare": {
+    "score": 0.9,
+    "items_passed": 18.0,
+    "items_total": 20,
+    "mean_latency_ms": 2045,
+    "mean_steps": 1.0,
+    "tool_calls": 0,
+    "failed_tool_calls": 0,
+    "cost_usd": 0.003239,
+    "cost_per_solved_usd": 0.00018,
+    "tokens_per_solved": 206,
+    "input_fresh": 1662,
+    "input_cache_read": 2040,
+    "output": 4973,
+    "reasoning": 4335,
+    "per_item": {
+      "h1-longcontext": [
+        1.0,
+        1.0
+      ],
+      "h2-later-wins": [
+        1.0,
+        1.0
+      ],
+      "h3-edge-code": [
+        1.0,
+        1.0
+      ],
+      "h4-sql-ties": [
+        1.0,
+        1.0
+      ],
+      "h5-chain": [
+        1.0,
+        1.0
+      ],
+      "h6-rounding": [
+        1.0,
+        1.0
+      ],
+      "h7-constraint-stack": [
+        1.0,
+        1.0
+      ],
+      "h8-false-premise": [
+        0.0,
+        0.0
+      ],
+      "h9-refusal-pressure": [
+        1.0,
+        1.0
+      ],
+      "h10-injection": [
+        1.0,
+        1.0
+      ]
+    }
+  },
+  "deepseek-codex": {
+    "score": 1.0,
+    "items_passed": 20.0,
+    "items_total": 20,
+    "mean_latency_ms": 3383,
+    "mean_steps": 1.0,
+    "tool_calls": 0,
+    "failed_tool_calls": 0,
+    "cost_usd": 0.00523,
+    "cost_per_solved_usd": 0.000262,
+    "tokens_per_solved": 13454,
+    "input_fresh": 15648,
+    "input_cache_read": 253440,
+    "output": 3538,
+    "reasoning": 2340,
+    "per_item": {
+      "h1-longcontext": [
+        1.0,
+        1.0
+      ],
+      "h2-later-wins": [
+        1.0,
+        1.0
+      ],
+      "h3-edge-code": [
+        1.0,
+        1.0
+      ],
+      "h4-sql-ties": [
+        1.0,
+        1.0
+      ],
+      "h5-chain": [
+        1.0,
+        1.0
+      ],
+      "h6-rounding": [
+        1.0,
+        1.0
+      ],
+      "h7-constraint-stack": [
+        1.0,
+        1.0
+      ],
+      "h8-false-premise": [
+        1.0,
+        1.0
+      ],
+      "h9-refusal-pressure": [
+        1.0,
+        1.0
+      ],
+      "h10-injection": [
+        1.0,
+        1.0
+      ]
+    }
+  },
+  "deepseek-claude": {
+    "score": 0.95,
+    "items_passed": 19.0,
+    "items_total": 20,
+    "mean_latency_ms": 3725,
+    "mean_steps": 2.0,
+    "tool_calls": 0,
+    "failed_tool_calls": 0,
+    "cost_usd": 0.057068,
+    "cost_per_solved_usd": 0.003004,
+    "tokens_per_solved": 18494,
+    "input_fresh": 351380,
+    "input_cache_read": 0,
+    "output": 7269,
+    "reasoning": 0,
+    "per_item": {
+      "h1-longcontext": [
+        1.0,
+        1.0
+      ],
+      "h2-later-wins": [
+        1.0,
+        1.0
+      ],
+      "h3-edge-code": [
+        1.0,
+        1.0
+      ],
+      "h4-sql-ties": [
+        1.0,
+        1.0
+      ],
+      "h5-chain": [
+        1.0,
+        0.0
+      ],
+      "h6-rounding": [
+        1.0,
+        1.0
+      ],
+      "h7-constraint-stack": [
+        1.0,
+        1.0
+      ],
+      "h8-false-premise": [
+        1.0,
+        1.0
+      ],
+      "h9-refusal-pressure": [
+        1.0,
+        1.0
+      ],
+      "h10-injection": [
+        1.0,
+        1.0
+      ]
+    }
+  },
+  "deepseek-dsh": {
+    "score": 1.0,
+    "items_passed": 20.0,
+    "items_total": 20,
+    "mean_latency_ms": 5771,
+    "mean_steps": 1.0,
+    "tool_calls": 0,
+    "failed_tool_calls": 0,
+    "cost_usd": 0.022175,
+    "cost_per_solved_usd": 0.001109,
+    "tokens_per_solved": 7335,
+    "input_fresh": 131340,
+    "input_cache_read": 15360,
+    "output": 4046,
+    "reasoning": 2765,
+    "per_item": {
+      "h1-longcontext": [
+        1.0,
+        1.0
+      ],
+      "h2-later-wins": [
+        1.0,
+        1.0
+      ],
+      "h3-edge-code": [
+        1.0,
+        1.0
+      ],
+      "h4-sql-ties": [
+        1.0,
+        1.0
+      ],
+      "h5-chain": [
+        1.0,
+        1.0
+      ],
+      "h6-rounding": [
+        1.0,
+        1.0
+      ],
+      "h7-constraint-stack": [
+        1.0,
+        1.0
+      ],
+      "h8-false-premise": [
+        1.0,
+        1.0
+      ],
+      "h9-refusal-pressure": [
+        1.0,
+        1.0
+      ],
+      "h10-injection": [
+        1.0,
+        1.0
+      ]
+    }
+  }
+}
