@@ -14,6 +14,9 @@ findings carry the rest of the page: tool access moved one model from 0 of 16 to
 and the same day of tokens cost $1.59 on DeepSeek against $94 to $235 on the frontier
 models.
 
+**Consolidated findings across every tier — including the accuracy ceiling, the 10.4x
+cost gap and the cache mechanism behind it: [`FINDINGS.md`](FINDINGS.md).**
+
 Every number below comes from a stored run, so you can re-score it yourself instead of
 trusting the writeup.
 

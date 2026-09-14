@@ -1,5 +1,12 @@
 # Scored harness scoreboard (2026-09-12)
 
+> **Superseded in framing.** These are the original 2026-09-12 results and they stand as
+> records, but the consolidated picture — across four instruments, four harnesses, 457
+> runs — is in [`FINDINGS.md`](FINDINGS.md). The short version: accuracy saturates at
+> every difficulty tried (two harnessed failures in 342 runs), and the real axes are
+> **cost** (10.4x, driven by prompt-cache hit rate) and **effort** (3-6x steps, widening
+> with task difficulty).
+
 12 items x 2 reps x 3 conditions = 72 runs. Every item has a machine grader
 (exact answer, hidden test cases, sqlite execution, JSON equality, format rules,
 refusal detection, file bytes). Raw runs: `suite_results.jsonl`. Grader: `suite.py`,

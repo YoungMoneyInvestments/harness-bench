@@ -21,6 +21,7 @@ import json
 import os
 import pathlib
 import re
+import signal
 import subprocess
 import sys
 import time
@@ -343,6 +344,40 @@ def deepseek_key():
     raise RuntimeError("no DeepSeek key found")
 
 
+def run_budgeted(cmd, cwd, env, budget, default=1200):
+    """Run a harness under a wall-clock budget; kill the whole process GROUP on expiry.
+
+    Killing only the direct child is not enough. `claude-ds` execs, but `npx` spawns the
+    real agent as a grandchild, and `codex exec` similar -- so a launcher-only kill leaves
+    an agent still writing to the workspace while grading reads it. start_new_session puts
+    each run in its own group so the whole tree dies together.
+
+    Returns (stdout, stderr, returncode, timed_out). Partial output survives a timeout,
+    and the workspace state is graded as-is.
+    """
+    budget = budget or default
+    t0 = time.time()
+    try:
+        proc = subprocess.Popen(cmd, cwd=cwd, env=env, stdin=subprocess.DEVNULL,
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+                                start_new_session=True)
+    except FileNotFoundError as e:
+        return "", str(e), 127, False
+    try:
+        out, err = proc.communicate(timeout=budget)
+        return out or "", err or "", proc.returncode, False
+    except subprocess.TimeoutExpired:
+        try:
+            os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
+        except Exception:
+            proc.kill()
+        try:
+            out, err = proc.communicate(timeout=20)
+        except Exception:
+            out, err = "", ""
+        return out or "", err or "", 124, True
+
+
 def norm(raw, style):
     """Normalise a harness usage block to (fresh, cache_read, cache_write, out, reasoning).
 
@@ -373,12 +408,13 @@ def cost_of(u, tier="flash"):
     return (u["fresh"] + u["cache_write"]) * r["miss"] + u["cache_read"] * r["hit"] + u["out"] * r["out"]
 
 
-def bare_run(prompt, workdir):
+def bare_run(prompt, workdir, timeout=None):
     key = deepseek_key()
     body = json.dumps({"model": DS_MODEL, "reasoning_effort": "high", "max_tokens": 4096,
                        "messages": [{"role": "user", "content": prompt}]})
     t0 = time.time()
-    proc = subprocess.run(["curl", "-sS", "-m", "600", "https://api.deepseek.com/chat/completions",
+    proc = subprocess.run(["curl", "-sS", "-m", str(int(timeout or 600)),
+                           "https://api.deepseek.com/chat/completions",
                            "-H", "Content-Type: application/json",
                            "-H", f"Authorization: Bearer {key}", "-d", body],
                           capture_output=True, text=True, timeout=900)
@@ -395,18 +431,13 @@ def bare_run(prompt, workdir):
                 tool_calls=0, failed_tool_calls=0)
 
 
-def codex_run(prompt, workdir):
+def codex_run(prompt, workdir, timeout=None):
     cmd = ["codex", "exec", "--json", "--skip-git-repo-check", "--ephemeral",
            "-C", str(workdir), "-m", DS_MODEL, "-c", "model_provider=deepseek",
            "-s", "workspace-write", prompt]
     t0 = time.time()
-    try:
-        proc = subprocess.run(cmd, capture_output=True, text=True,
-                              env=dict(os.environ, CODEX_HOME=str(CODEX_HOME_DS)),
-                              stdin=subprocess.DEVNULL, timeout=1200)
-        out, rc = proc.stdout, proc.returncode
-    except subprocess.TimeoutExpired:
-        out, rc = "", 124
+    out, _err, rc, timed_out = run_budgeted(
+        cmd, None, dict(os.environ, CODEX_HOME=str(CODEX_HOME_DS)), timeout)
     ms = int((time.time() - t0) * 1000)
     text, usage, calls, failed, steps = "", {}, 0, 0, 0
     for line in out.splitlines():
@@ -426,10 +457,11 @@ def codex_run(prompt, workdir):
         elif ev.get("type") == "turn.completed":
             usage = ev.get("usage", {})
     return dict(text=text, usage=usage, norm=norm(usage, "openai"), latency_ms=ms,
-                steps=max(steps, 1), tool_calls=calls, failed_tool_calls=failed, exit=rc)
+                steps=max(steps, 1), tool_calls=calls, failed_tool_calls=failed, exit=rc,
+                timed_out=timed_out)
 
 
-def claude_run(prompt, workdir, model=None):
+def claude_run(prompt, workdir, model=None, timeout=None):
     if not EMPTY_MCP.exists():
         EMPTY_MCP.parent.mkdir(parents=True, exist_ok=True)
         EMPTY_MCP.write_text('{"mcpServers": {}}')
@@ -439,12 +471,7 @@ def claude_run(prompt, workdir, model=None):
     if model:
         cmd += ["--model", model]
     t0 = time.time()
-    try:
-        proc = subprocess.run(cmd, cwd=str(workdir), capture_output=True, text=True,
-                              stdin=subprocess.DEVNULL, timeout=1200)
-        out, rc = proc.stdout, proc.returncode
-    except subprocess.TimeoutExpired:
-        out, rc = "", 124
+    out, _err, rc, timed_out = run_budgeted(cmd, str(workdir), dict(os.environ), timeout)
     ms = int((time.time() - t0) * 1000)
     text, usage, calls, failed, steps = "", {}, 0, 0, 0
     for line in out.splitlines():
@@ -468,7 +495,8 @@ def claude_run(prompt, workdir, model=None):
             text = ev.get("result") or text
             usage = ev.get("usage", {})
     return dict(text=text, usage=usage, norm=norm(usage, "anthropic"), latency_ms=ms,
-                steps=max(steps, 1), tool_calls=calls, failed_tool_calls=failed, exit=rc)
+                steps=max(steps, 1), tool_calls=calls, failed_tool_calls=failed, exit=rc,
+                timed_out=timed_out)
 
 
 def _dsh_sessions():
@@ -476,20 +504,16 @@ def _dsh_sessions():
     return {p for p in d.glob("*/session-*") if p.is_dir()} if d.exists() else set()
 
 
-def dsh_run(prompt, workdir):
+def dsh_run(prompt, workdir, timeout=None):
     DSH_HOME.mkdir(parents=True, exist_ok=True)
     DSH_AGENTS_HOME.mkdir(parents=True, exist_ok=True)
     before = _dsh_sessions()
     cmd = ["npx", "--yes", DSH_PKG, "--profile", "headless", prompt]
     t0 = time.time()
-    try:
-        proc = subprocess.run(cmd, cwd=str(workdir), capture_output=True, text=True,
-                              env=dict(os.environ, DSH_HOME=str(DSH_HOME),
-                                       DSH_AGENTS_HOME=str(DSH_AGENTS_HOME)),
-                              stdin=subprocess.DEVNULL, timeout=1200)
-        out, rc = proc.stdout, proc.returncode
-    except subprocess.TimeoutExpired:
-        out, rc = "", 124
+    out, _err, rc, timed_out = run_budgeted(
+        cmd, str(workdir),
+        dict(os.environ, DSH_HOME=str(DSH_HOME), DSH_AGENTS_HOME=str(DSH_AGENTS_HOME)),
+        timeout)
     ms = int((time.time() - t0) * 1000)
     new = _dsh_sessions() - before
     usage, calls, failed, steps, text = {}, 0, 0, 0, out.strip()
@@ -519,7 +543,8 @@ def dsh_run(prompt, workdir):
                         failed += 1
             usage = agg
     return dict(text=text, usage=usage, norm=norm(usage, "anthropic"), latency_ms=ms,
-                steps=max(steps, 1), tool_calls=calls, failed_tool_calls=failed, exit=rc)
+                steps=max(steps, 1), tool_calls=calls, failed_tool_calls=failed, exit=rc,
+                timed_out=timed_out)
 
 
 CONDITIONS = {
